@@ -27,6 +27,19 @@ of [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 cd jbtronics-blogging-demo/
 docker compose up --build -d 
 docker exec -it jbtronics-demo bash
-symfony composer install
-
+./install.sh
 ```
+
+- When the installation is successful, you will see the following output:
+
+![install.png](install.png)
+
+- Navigate to the following URLs to access the application and database respectively:
+    - Application - [http://localhost:6680](http://localhost:6680)
+    - Database via phpMyAdmin - [http://localhost:6681](http://localhost:6681)
+
+## Screenshots
+
+![posts.png](posts.png)
+
+
