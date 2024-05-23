@@ -1,4 +1,4 @@
-# jbstronics-blogging-demo
+# Simple Demo repo
 
 ## Introduction
 
@@ -42,4 +42,4 @@ docker exec -it jbtronics-demo bash
 
 ![posts.png](posts.png)
 
-
+## Global Settings

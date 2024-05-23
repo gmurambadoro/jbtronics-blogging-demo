@@ -22,7 +22,7 @@ class GlobalSettings
     #[SettingsParameter(type: StringType::class, name: 'applicationName', label: 'Application Name')]
     #[Length(max: 150)]
     #[NotBlank(message: 'The application name cannot be blank!')]
-    public string $applicationName = 'jbtronics Settings Demo';
+    public string $applicationName = 'Simple Demo repo';
 
     #[SettingsParameter(type: StringType::class, name: 'applicationTagline', label: 'Application Tagline')]
     #[Length(max: 255)]
