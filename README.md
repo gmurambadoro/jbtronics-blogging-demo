@@ -43,3 +43,61 @@ docker exec -it jbtronics-demo bash
 ![posts.png](posts.png)
 
 ## Global Settings
+
+The `Global Settings` controls the settings variables `applicationName` and `applicationTagline`. These settings are
+stored in the database.
+
+The mapping for these is in the `App\Settings\GlobalSettings` class.
+
+```php
+#[Settings(
+    name: 'global',
+    storageAdapter: ORMStorageAdapter::class,
+    dependencyInjectable: true,
+)]
+class GlobalSettings
+{
+    use SettingsTrait;
+
+    #[SettingsParameter(type: StringType::class, name: 'applicationName', label: 'Application Name')]
+    #[Length(max: 150)]
+    #[NotBlank(message: 'The application name cannot be blank!')]
+    public string $applicationName = 'Simple Demo repo';
+
+    #[SettingsParameter(type: StringType::class, name: 'applicationTagline', label: 'Application Tagline')]
+    #[Length(max: 255)]
+    #[NotBlank(message: 'The tagline cannot be blank!')]
+    public string $applicationTagline = 'Simple blogging application to demonstrate usage of jbtronics/settings-bundle';
+}
+```
+
+The ORMStorageAdapter class is configured in the `config/packages/jbtronics_settings.yaml` file as follows:
+
+```yaml
+jbtronics_settings:
+  orm_storage:
+    default_entity_class: App\Entity\SettingsORMEntry
+    prefetch_all: true
+```
+
+The entity class for this is below:
+
+```php
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Jbtronics\SettingsBundle\Entity\AbstractSettingsORMEntry;
+
+#[ORM\Entity]
+#[ORM\Table(name: 'settings')]
+class SettingsORMEntry extends AbstractSettingsORMEntry
+{
+    // The entity must extend the AbstractSettingsORMEntry class and must just define an ID field.
+    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: Types::INTEGER)]
+    private int $id;
+}
+```
+
+The two `SettingsParameter` annotated fields result in the following form:
+
+![settings-form.png](settings-form.png)
+
