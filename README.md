@@ -1,4 +1,4 @@
-# symfony-lamp-stack-with-docker
+# jbstronics-blogging-demo
 
 This project is a starter project for building a Symfony application using Docker. 
 

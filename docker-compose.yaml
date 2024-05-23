@@ -5,14 +5,18 @@ services:
       dockerfile: Dockerfile
     hostname: app
     restart: unless-stopped
-    container_name: symfony-app # A custom name to be used in build scripts
+    container_name: "${APP_NAME}" # A custom name to be used in build scripts
     depends_on:
       - db # requires the database service to be available
+    env_file:
+      - path: ./docker.env
+        required: true
     ports:
-      - "9980:80" # the service will be available in my browser at http://localhost:9980
+      - "${APP_PORT}:80" # the service will be available in my browser at http://localhost:9980
     volumes:
       - .:/var/www/project # all files in current directory will also be available in the container, allowing you to update the source code with your IDE
       - ./000-default.conf:/etc/apache2/sites-available/000-default.conf:ro # Override the default apache vhost file to ensure that the symfony application is served by default
+      - ./.bashrc:/root/.bashrc:ro # Bash aliases
       # the contents of 000-default.conf is obtained from https://symfony.com/doc/current/setup/web_server_configuration.html, with modifications applied to match folder locations
 
   db: # The service name or host to the database
@@ -31,8 +35,11 @@ services:
   phpmyadmin:
     image: phpmyadmin
     restart: unless-stopped
+    env_file:
+      - path: ./docker.env
+        required: true
     ports:
-      - "9981:80" # the service will be available in my browser at http://localhost:9981
+      - "${PMA_PORT}:80" # the service will be available in my browser at http://localhost:9981
     depends_on:
       - db
     environment:
