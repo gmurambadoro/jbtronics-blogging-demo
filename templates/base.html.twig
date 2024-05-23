@@ -29,8 +29,19 @@
     <body>
         <main class="container">
             <hgroup>
-                <h3>Quisque eget eros</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                <h3>
+                    <a href="{{ path('app_default') }}">
+                        {{ settings_instance('global').applicationName }}
+                    </a>
+                </h3>
+                <p>
+                    {{ settings_instance('global').applicationTagline }}
+                    {% if app.user %}
+                        <small>
+                            [ <a href="{{ path('app_settings_global') }}">Edit Global Settings</a> ]
+                        </small>
+                    {% endif %}
+                </p>
             </hgroup>
 
             {% block body %}{% endblock %}

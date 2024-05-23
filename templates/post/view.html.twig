@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ post }} {% endblock %}
+
+{% block body %}
+    <article>
+        <h3>{{ post }}</h3>
+
+        <small>Written by <code><samp>@{{ post.author.username }}</samp></code></small>
+
+        <p>
+            {{ post.content|nl2br }}
+        </p>
+
+        <a href="{{ path('app_default') }}" class="button button-outline"><- Back</a>
+    </article>
+{% endblock %}
+
+

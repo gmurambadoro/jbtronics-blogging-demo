@@ -27,6 +27,11 @@ class Post
     #[ORM\Column(name: 'content', type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
+    public function __toString(): string
+    {
+        return (string)$this->getTitle();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -5,15 +5,29 @@
 {% block body %}
     <h3>Posts</h3>
 
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(posts) }} [ <a href="{{ path('app_settings_pagination') }}">Change pagination settings</a> ]
+    </div>
+
+    <br />
+
     {% for post in posts %}
         <article>
             <header>{{ post.title }}</header>
+            <small>Written by <code><samp>@{{ post.author.username }}</samp></code></small>
             <p>{{ post.content|trim|striptags|u.truncate(200, '...') }}</p>
             <p>
-                <a href="#">Read more&hellip;</a>
+                <a href="{{ path('app_post_view', {'id': post.id}) }}">Read more&hellip;</a>
             </p>
         </article>
     {% endfor %}
 
-    <p></p>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(posts) }}
+    </div>
+
+    <br />
+
 {% endblock %}
