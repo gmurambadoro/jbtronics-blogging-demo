@@ -17,7 +17,7 @@ services:
       # the contents of 000-default.conf is obtained from https://symfony.com/doc/current/setup/web_server_configuration.html, with modifications applied to match folder locations
 
   db: # The service name or host to the database
-    image: mariadb:10.6
+    image: mariadb:10.11
     restart: unless-stopped # ensures that the service automatically runs as soon as Docker starts up
     command: "--default-authentication-plugin=mysql_native_password" # Fixes the "mysqli::real_connect(): (HY000/1524): Plugin 'mysql_native_password' is not loaded" error
     volumes:
