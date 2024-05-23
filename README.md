@@ -42,7 +42,7 @@ docker exec -it jbtronics-demo bash
 
 ![posts.png](posts.png)
 
-## Global Settings
+## Global Settings (1)
 
 The `Global Settings` controls the settings variables `applicationName` and `applicationTagline`. These settings are
 stored in the database.
@@ -101,3 +101,103 @@ The two `SettingsParameter` annotated fields result in the following form:
 
 ![settings-form.png](settings-form.png)
 
+### Usage
+
+```html
+
+<main class="container">
+    <hgroup>
+        <h3>
+            <a href="{{ path('app_default') }}">
+                {{ settings_instance('global').applicationName }}
+            </a>
+        </h3>
+        <p>
+            {{ settings_instance('global').applicationTagline }}
+
+            <small>
+                [ <a href="{{ path('app_settings_global') }}">Edit Global Settings</a> ]
+            </small>
+        </p>
+    </hgroup>
+
+    {% block body %}{% endblock %}
+</main>
+```
+
+## Pagination Settings (2)
+
+The *Pagination Settings* are driven by the `App\Settings\PaginationSettings` class that uses a file storage backend.
+
+```php
+use Jbtronics\SettingsBundle\ParameterTypes\IntType;
+use Jbtronics\SettingsBundle\Settings\Settings;
+use Jbtronics\SettingsBundle\Settings\SettingsParameter;
+use Jbtronics\SettingsBundle\Settings\SettingsTrait;
+use Jbtronics\SettingsBundle\Storage\PHPFileStorageAdapter;
+use Symfony\Component\Validator\Constraints\Range;
+
+#[Settings(
+    name: 'pagination',
+    storageAdapter: PHPFileStorageAdapter::class,
+    storageAdapterOptions: [
+        'filename' => 'pagination.php',
+    ],
+    dependencyInjectable: true,
+)]
+class PaginationSettings
+{
+    use SettingsTrait;
+
+    #[SettingsParameter(type: IntType::class, name: 'postsPerPage', label: 'Number of posts per page')]
+    #[Range(notInRangeMessage: 'The posts per page must be greater than 0 and cannot exceed 15.', min: 1, max: 15)]
+    public int $postsPerPage = 10;
+}
+```
+
+The resultant form as configured by the `SettingsParameter` on the `$postsPerPage` field is below:
+
+![pagination-settings.png](pagination-settings.png)
+
+The actual settings file (which gets generate **after** you save your settings) is
+in `./var/jbtronics_settings/pagination.php`
+
+![pagination-php.png](pagination-php.png)
+
+### Usage
+
+```php
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+#[Route('/post', name: 'app_post_', methods: ['GET'])]
+final class PostController extends AbstractController
+{
+    #[Route('', name: 'index', methods: ['GET'])]
+    public function index(
+        PostRepository $postRepository,
+        PaginatorInterface $paginator,
+        Request $request,
+        SettingsManagerInterface $settingsManager): Response
+    {
+        /** @var PaginationSettings $paginationSettings */
+        $paginationSettings = $settingsManager->get(PaginationSettings::class);
+
+        return $this->render('post/index.html.twig', [
+            'posts' => $paginator->paginate(
+                target: $postRepository->getPostsQuery(),
+                page: $request->query->getInt('page', 1),
+                limit: $paginationSettings->postsPerPage, // these settings are being read from the file system
+            ),
+        ]);
+    }
+
+    #[Route('/view/{id}', name: 'view', methods: ['GET'])]
+    public function view(Post $post): Response
+    {
+        return $this->render('post/view.html.twig', [
+            'post' => $post,
+        ]);
+    }
+}
+```
