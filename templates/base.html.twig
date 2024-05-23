@@ -9,6 +9,16 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
         <link rel="stylesheet" href="{{ asset('milligram/milligram.min.css') }}">
 
+        <style>
+            main.container {
+                padding-top: 10px;
+            }
+
+            header {
+                font-weight: bold;
+            }
+        </style>
+
         {% block stylesheets %}
         {% endblock %}
 
@@ -17,6 +27,13 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <main class="container">
+            <hgroup>
+                <h3>Quisque eget eros</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </hgroup>
+
+            {% block body %}{% endblock %}
+        </main>
     </body>
 </html>
