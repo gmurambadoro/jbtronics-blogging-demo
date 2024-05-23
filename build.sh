@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-source ./docker.env
+docker compose up --build -d
 
-docker compose --env-file=docker.env up --build -d
-
-echo "Web:        http://localhost:$APP_PORT"
-echo "phpMyAdmin: http://localhost:$PMA_PORT"
+echo "Web:        http://localhost:6680"
+echo "phpMyAdmin: http://localhost:6681"
 
